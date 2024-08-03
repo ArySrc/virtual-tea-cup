@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chai - AryCodes</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .teaglass {
+            height: 30%;
+            aspect-ratio: 1/1;
+            border: 2px solid #333;
+            display: flex;
+            justify-content: flex-end;
+            flex-direction: column;
+            position: absolute;
+            cursor: grab;
+            background-color: #d3d3d3;
+            clip-path: polygon(0 0, 100% 0, 83% 100%, 17% 100%);
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tea {
+            background: linear-gradient(to bottom, #c18244, #c18244, #8f5720);
+            width: 100%;
+            clip-path: polygon(0 0, 100% 0, 83% 100%, 17% 100%);
+            transition: height 0.3s ease;
+        }
+
+        img.unselectable {
+            user-select: none;
+            max-width: 100%;
+            height: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: -400px;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Have A Chai With AryCodes</h1>
+        <p>Click and drag the teaglass to enjoy a virtual cup of tea!</p>
+        <div class="teaglass" id="teaglass" onmousedown="startDrag(event)">
+            <img src="s.svg" alt="" class="unselectable">
+            <div class="tea" id="tea"></div>
+        </div>
+    </div>
+    <script>
+        let isDragging = false;
+        let offsetX = 0;
+        const teaglass = document.getElementById('teaglass');
+        const teaDiv = document.getElementById('tea');
+
+        teaglass.addEventListener('mousedown', startDrag);
+        teaglass.addEventListener('touchstart', startDrag);
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', touchDrag);
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            e.preventDefault();
+            isDragging = true;
+            teaglass.style.transition = 'none';
+
+            // Check if the event is a touch event
+            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+            offsetX = clientX - teaglass.getBoundingClientRect().left;
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+
+            const maxX = window.innerWidth - teaglass.offsetWidth;
+            let newX = e.clientX - offsetX;
+            newX = Math.min(newX, maxX);
+            newX = Math.max(newX, 0);
+            teaglass.style.left = `${newX}px`;
+            const percentage = (newX / maxX) * 100;
+            teaDiv.style.height = `${percentage}%`;
+        }
+
+        function touchDrag(e) {
+            if (!isDragging) return;
+
+            const maxX = window.innerWidth - teaglass.offsetWidth;
+            let newX = e.touches[0].clientX - offsetX;
+            newX = Math.min(newX, maxX);
+            newX = Math.max(newX, 0);
+            teaglass.style.left = `${newX}px`;
+            const percentage = (newX / maxX) * 100;
+            teaDiv.style.height = `${percentage}%`;
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            teaglass.style.transition = 'all 0.3s ease';
+        }
+    </script>
+
+    <a id="floating-button" href="https://www.instagram.com/arycodes" target="_blank"
+        style="position:fixed;bottom:20px;right:20px;background-color:#fff;color:#000;border:none;border-radius:50%;padding:15px;cursor:pointer;box-shadow:0 4px 8px rgba(0,0,0,0.2);transition:background-color 0.3s ease,transform 0.3s ease;display:flex;align-items:center;justify-content:center;text-decoration:none;transform-style:preserve-3d;perspective:1000px;">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+        <i class="fab fa-instagram" style="font-size:24px;transform:rotateY(0deg);transition:transform 0.3s ease;"></i>
+    </a>
+
+</body>
+
+</html>
